@@ -7,19 +7,18 @@ export const app = fastify()
 
 app.register(appRoutes)
 
-
 app.setErrorHandler((error, _, reply) => {
-  if(error instanceof ZodError){
+  if (error instanceof ZodError) {
     return reply.status(400).send({
       message: 'Validation error',
       issues: error.format(),
     })
   }
 
-  if(env.NODE_ENV !== 'productions'){
+  if (env.NODE_ENV !== 'productions') {
     console.error(error)
-  }else {
-    //deveria ter dataddog/newrelic e etc para pegar o log na plataforma de monitoramento
+  } else {
+    // deveria ter dataddog/newrelic e etc para pegar o log na plataforma de monitoramento
   }
 
   return reply.status(500).send({
