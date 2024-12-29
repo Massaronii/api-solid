@@ -1,7 +1,7 @@
 import { CheckInsRepository } from '@/repositories/check-ins-repository'
 import { GymsRepository } from '@/repositories/gyms-repository'
 import { CheckIn } from '@prisma/client'
-import { ResourceNotFound } from './erros/resource-not-found'
+import { ResourceNotFoundError } from './erros/resource-not-found-error'
 import { getDistanceBetweenCoordinates } from '@/utils/get-distance-between-coordinates'
 import { MaxDistanceError } from './erros/max-distance-error'
 import { MaxNumberOfCheckInsError } from './erros/max-numbers-check-ins-error'
@@ -32,7 +32,7 @@ export class CheckInUseCase {
     const gym = await this.gymsRepository.findById(gymId)
 
     if (!gym) {
-      throw new ResourceNotFound()
+      throw new ResourceNotFoundError()
     }
 
     const distance = getDistanceBetweenCoordinates(
