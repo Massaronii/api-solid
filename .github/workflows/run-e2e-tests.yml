@@ -23,10 +23,15 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-  
+
       - run: npm ci
-  
+
       - run: npm run test:e2e
         env:
           JWT_SECRET: testing
           DATABASE_URL: "postgresql://docker:docker@api-solid-pg:5432/apisolid?schema=public"
+
+  no-dependency-job:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "This job has no dependencies"
