@@ -6,10 +6,10 @@ export default defineConfig({
   test: {
     environment: 'prisma',
     environmentOptions: {
-      adapter: 'postgresql',
+      adapter: 'postgres',
       envFile: '.env.example',
-      prismaEnvVarName: 'DATABASE_URL', // Optional
-      transformMode: 'ssr', // Optional
+      prismaEnvVarName: 'DATABASE_URL',
+      transformMode: 'ssr',
     },
     environmentMatchGlobs: [['src/http/controllers/**', 'prisma']],
 
