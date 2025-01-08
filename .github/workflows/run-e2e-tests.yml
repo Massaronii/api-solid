@@ -13,16 +13,14 @@ jobs:
         ports:
           - 5432:5432
         env:
-          DATABASE_USER: docker
-          DATABASE_PASS: docker
-          DATABASE_HOST: localhost  # ou o IP do servidor
-          DATABASE_PORT: 5432      # ou a porta do seu banco
-          DATABASE_NAME: apisolid  # o nome do banco
-          options: --health-cmd="pg_isready -U docker" --health-timeout=5s --health-retries=5
-
+          POSTGRES_USER: docker
+          POSTGRES_PASSWORD: docker
+          POSTGRES_DB: apisolid
+        options: --health-cmd="pg_isready -U docker" --health-timeout=5s --health-retries=5
 
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -32,9 +30,9 @@ jobs:
 
       - name: Wait for PostgreSQL to be ready
         run: |
-          until pg_isready -h localhost -p 5432 -U docker; do
+          until pg_isready -h api-solid-pg -p 5432 -U docker; do
             echo "Waiting for database to be ready..."
-            sleep 5
+            sleep 10  # Atraso maior entre tentativas
           done
 
       - run: npm run test:e2e
