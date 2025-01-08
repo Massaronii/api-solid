@@ -13,9 +13,13 @@ jobs:
         ports:
           - 5432:5432
         env:
-          POSTGRESQL_USERNAME: docker
-          POSTGRESQL_PASSWORD: docker
-          POSTGRESQL_DATABASE: apisolid
+          DATABASE_USER: docker
+          DATABASE_PASS: docker
+          DATABASE_HOST: localhost  # ou o IP do servidor
+          DATABASE_PORT: 5432      # ou a porta do seu banco
+          DATABASE_NAME: apisolid  # o nome do banco
+          options: --health-cmd="pg_isready -U docker" --health-timeout=5s --health-retries=5
+
 
     steps:
       - uses: actions/checkout@v3
@@ -26,12 +30,14 @@ jobs:
 
       - run: npm ci
 
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          until pg_isready -h localhost -p 5432 -U docker; do
+            echo "Waiting for database to be ready..."
+            sleep 5
+          done
+
       - run: npm run test:e2e
         env:
           JWT_SECRET: testing
           DATABASE_URL: "postgresql://docker:docker@api-solid-pg:5432/apisolid?schema=public"
-
-  no-dependency-job:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "This job has no dependencies"
